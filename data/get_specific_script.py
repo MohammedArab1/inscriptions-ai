@@ -102,4 +102,3 @@ with open(output_file, mode='w', newline='', encoding='utf-8') as file:
             print(f"Error processing {url}: {e}")
 
 print(f"Scraping completed. Data saved to {output_file}. Images saved to {image_folder}.")
-
