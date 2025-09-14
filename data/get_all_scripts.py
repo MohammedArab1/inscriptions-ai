@@ -4,6 +4,7 @@ import zipfile
 from bs4 import BeautifulSoup
 from io import BytesIO
 import tempfile
+from time import sleep
 
 # Create base images directory
 base_image_dir = "images"
@@ -26,6 +27,7 @@ for script_id in range(1, 36):
         for link in links:
             href = link.get('href')
             if href:
+                sleep(2)
                 full_url = f"https://ociana.osu.edu{href}"
                 detail_response = requests.get(full_url)
                 detail_soup = BeautifulSoup(detail_response.text, 'html.parser')
