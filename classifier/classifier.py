@@ -4,9 +4,17 @@ import tensorflow as tf
 
 
 # create the imageDataGenerator
-train_datagen = ImageDataGenerator(rescale=1./255)
+train_datagen = ImageDataGenerator(rescale=1./255,
+    rotation_range=40,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True,
+    fill_mode='nearest')
+
 train_generator = train_datagen.flow_from_directory(
-    'data/allScripts/train',
+    '../data/allScripts/train',
     target_size=(150, 150),
     class_mode='binary'
 )
@@ -14,7 +22,7 @@ train_generator = train_datagen.flow_from_directory(
 # create validation data generator
 validation_datagen = ImageDataGenerator(rescale=1./255)
 validation_generator = validation_datagen.flow_from_directory(
-    'data/allScripts/validation',
+    '../data/allScripts/validation',
     target_size=(150, 150),
     class_mode='binary'
 )
