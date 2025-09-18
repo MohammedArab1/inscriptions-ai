@@ -1,5 +1,8 @@
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.optimizers import RMSprop
+from tensorflow.keras.applications.inception_v3 import InceptionV3
+from tensorflow.keras.models import Model
+from tensorflow.keras import layers
 import tensorflow as tf
 
 
@@ -28,17 +31,36 @@ validation_generator = validation_datagen.flow_from_directory(
 )
 
 # create the neural network (can optimize by using existing architectures like VGG16, ResNet50, etc. and fine-tuning them)
-model = tf.keras.models.Sequential([
-    tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(150, 150, 3)),
-    tf.keras.layers.MaxPooling2D(2, 2),
-    tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
-    tf.keras.layers.MaxPooling2D(2, 2),
-    tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
-    tf.keras.layers.MaxPooling2D(2, 2),
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(512, activation='relu'),
-    tf.keras.layers.Dense(1, activation='sigmoid')
-])
+# model = tf.keras.models.Sequential([
+#     tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(150, 150, 3)),
+#     tf.keras.layers.MaxPooling2D(2, 2),
+#     tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+#     tf.keras.layers.MaxPooling2D(2, 2),
+#     tf.keras.layers.Conv2D(64, (3, 3), activation='relu'),
+#     tf.keras.layers.MaxPooling2D(2, 2),
+#     tf.keras.layers.Flatten(),
+#     tf.keras.layers.Dense(512, activation='relu'),
+#     tf.keras.layers.Dense(1, activation='sigmoid')
+# ])
+
+# trying with a pre trained model
+pre_trained_model = InceptionV3(input_shape=(150,150,3),weights='imagenet', include_top=False)
+# pre_trained_model.summary()
+
+for layer in pre_trained_model.layers:
+    layer.trainable = False
+
+last_layer = pre_trained_model.get_layer('mixed7')
+last_output = last_layer.output
+
+x = layers.Flatten()(last_output)
+x = layers.Dense(1024, activation='relu')(x)
+x = layers.Dense(1, activation='sigmoid')(x)
+
+
+model = Model(pre_trained_model.input, x)
+
+
 
 # compile the model
 model.compile(optimizer=RMSprop(learning_rate=0.001),
