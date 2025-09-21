@@ -13,3 +13,6 @@ To create a model that can classify and 'read' pictures of pre-Islamic North Ara
 
 ## Next Steps
 - Gather the data to create the classification model. Should have 2 folders: **safaitic** and **other**.
+
+## Miscellaneous
+- Models are createad in Jupyter notebook files. Install requirements and run `jupyter lab` to open them.
